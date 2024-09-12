@@ -2,7 +2,7 @@
   "configurations": [
     {
       "name": "CMake",
-      "compileCommands": "${config:cmake.buildDirectory}/compile_commands.json",
+      "compileCommands": "build_debug/compile_commands.json",
       "configurationProvider": "ms-vscode.cmake-tools"
     }
   ],

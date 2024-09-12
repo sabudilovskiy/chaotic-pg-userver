@@ -1,42 +1,35 @@
 version: "2.3"
 
 services:
-    postgres:
-        container_name: service-postgres
+    service-pg:
         image: postgres:12
         environment: &db_env
-          POSTGRES_DB: pg_service_template_db_1
-          POSTGRES_USER: user
-          POSTGRES_PASSWORD: password
+          POSTGRES_DB: service_template_db_1
+          POSTGRES_USER: service_template_user
+          POSTGRES_PASSWORD: top_secret
         ports:
-          - 5432
+          - 18800:5432
         volumes:
           - ./postgresql/schemas:/docker-entrypoint-initdb.d
-          - ./.pgdata:/var/lib/postgresql/data
+          - ./container/pg_data:/var/lib/postgresql/data
         networks:
-          - postgres
+          - unite_network
+        restart: on-failure
 
-    pg_service_template-container:
-        image: ghcr.io/userver-framework/ubuntu-22.04-userver-pg:latest
+    service_template:
+        image: service_template:latest
         privileged: true
-        environment:
-          <<: *db_env
-          PREFIX: ${PREFIX:-~/.local}
-          CCACHE_DIR: /pg_service_template/.ccache
-          CORES_DIR: /cores
+        ports: 
+          - 80:8080
         volumes:
-          - .:/pg_service_template:rw
-          - ${TC_CORES_DIR:-./.cores}:/cores:rw
-        ports:
-          - 8080:8080
-        working_dir: /pg_service_template
-        entrypoint:
-          - ./tests/run_as_user.sh
+          - ./container/cores:/cores:rw
+          - ./container/configs:/configs:ro
         depends_on:
-          - postgres
+          - service-pg
         networks:
-          - postgres
+          - unite_network
+        restart: on-failure
 
 networks:
-    postgres:
+    unite_network:
         driver: bridge

@@ -1,0 +1,35 @@
+{
+    "version": 8,
+    "configurePresets": [
+        {
+            "name": "debug",
+            "displayName": "Clang 17.0.6 x86_64-pc-linux-gnu",
+            "description": "Using compilers: C = /usr/bin/clang-17, CXX = /usr/bin/clang++-17",
+            "binaryDir": "${sourceDir}/build_debug",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "/usr/bin/clang-17",
+                "CMAKE_CXX_COMPILER": "/usr/bin/clang++-17",
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "1",
+                "CMAKE_CXX_STANDARD": "20",
+                "CMAKE_CXX_COMPILER_LAUNCHER": "ccache"
+            },
+            "generator": "Ninja"
+        },
+        {
+            "name": "release",
+            "displayName": "Clang 17.0.6 x86_64-pc-linux-gnu",
+            "description": "Using compilers: C = /usr/bin/clang-17, CXX = /usr/bin/clang++-17",
+            "binaryDir": "${sourceDir}/build_release",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "/usr/bin/clang-17",
+                "CMAKE_CXX_COMPILER": "/usr/bin/clang++-17",
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "1",
+                "CMAKE_CXX_STANDARD": "20",
+                "CMAKE_CXX_COMPILER_LAUNCHER": "ccache"
+            },
+            "generator": "Ninja"
+        }
+    ]
+}

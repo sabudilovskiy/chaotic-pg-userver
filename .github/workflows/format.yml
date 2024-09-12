@@ -1,0 +1,40 @@
+name: format
+
+'on':
+  pull_request:
+  push:
+    branches:
+      - trunk
+
+env:
+  UBSAN_OPTIONS: print_stacktrace=1
+
+jobs:
+  posix:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-22.04
+
+    name: 'format'
+    runs-on: ${{matrix.os}}
+
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.1
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Install dependencies
+        run: |
+          sudo make install-compiler compiler=clang version=17
+          sudo apt install clang-format-17
+          sudo apt install python3
+          sudo pip install autopep8==2.3.1
+      - name: Format
+        run: |
+          make format
+      - name: Check format sources
+        run: |
+          make check-git-status

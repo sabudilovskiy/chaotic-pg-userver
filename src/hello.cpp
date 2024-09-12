@@ -9,7 +9,7 @@
 #include <userver/storages/postgres/component.hpp>
 #include <userver/utils/assert.hpp>
 
-namespace pg_service_template {
+namespace service_template {
 
 namespace {
 
@@ -28,24 +28,29 @@ class Hello final : public userver::server::handlers::HttpHandlerBase {
   std::string HandleRequestThrow(
       const userver::server::http::HttpRequest& request,
       userver::server::request::RequestContext&) const override {
-    const auto& name = request.GetArg("name");
+    userver::formats::json::Value json_body =
+        userver::formats::json::FromString(request.RequestBody());
+    auto req = json_body.As<codegen::HelloRequestBody>();
 
     auto user_type = UserType::kFirstTime;
-    if (!name.empty()) {
+    if (!req.name.empty()) {
       auto result = pg_cluster_->Execute(
           userver::storages::postgres::ClusterHostType::kMaster,
           "INSERT INTO hello_schema.users(name, count) VALUES($1, 1) "
           "ON CONFLICT (name) "
           "DO UPDATE SET count = users.count + 1 "
           "RETURNING users.count",
-          name);
+          req.name);
 
       if (result.AsSingleRow<int>() > 1) {
         user_type = UserType::kKnown;
       }
     }
-
-    return pg_service_template::SayHelloTo(name, user_type);
+    codegen::HelloResponseBody resp;
+    resp.current_time =
+        userver::utils::datetime::TimePointTz{userver::utils::datetime::Now()};
+    resp.text = service_template::SayHelloTo(req.name, user_type);
+    return ToString(userver::formats::json::ValueBuilder{resp}.ExtractValue());
   }
 
   userver::storages::postgres::ClusterPtr pg_cluster_;
@@ -70,8 +75,6 @@ std::string SayHelloTo(std::string_view name, UserType type) {
 
 void AppendHello(userver::components::ComponentList& component_list) {
   component_list.Append<Hello>();
-  component_list.Append<userver::components::Postgres>("postgres-db-1");
-  component_list.Append<userver::clients::dns::Component>();
 }
 
-}  // namespace pg_service_template
+}  // namespace service_template
