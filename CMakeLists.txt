@@ -5,14 +5,12 @@ set(USERVER_FEATURE_POSTGRESQL ON CACHE BOOL "" FORCE)
 set(USERVER_FEATURE_CRYPTOPP_BLAKE2 OFF CACHE BOOL "" FORCE)
 set(USERVER_FEATURE_GRPC_CHANNELZ OFF CACHE BOOL "" FORCE)
 set(USERVER_FEATURE_REDIS_HI_MALLOC ON CACHE BOOL "" FORCE)
-SET(USERVER_FEATURE_PATCH_LIBPQ OFF CACHE BOOL "" FORCE)
-include(FetchContent)
-FetchContent_Declare(
-        userver
-        GIT_REPOSITORY https://github.com/userver-framework/userver
-        GIT_TAG b7617d3eb3cf6c3de718ab2534bd17e25caebadb
-)
-FetchContent_MakeAvailable(userver)
+set(USERVER_FEATURE_PATCH_LIBPQ OFF CACHE BOOL "" FORCE)
+if (NOT DEFINED service_template_CLANG_FORMAT)
+    set(service_template_CLANG_FORMAT "" CACHE STRING "clang format used by userver chaotic")
+endif()
+message(STATUS "service_template_CLANG_FORMAT: ${service_template_CLANG_FORMAT}")
+include (cmake/deps.cmake)
 
 file(GLOB_RECURSE SCHEMAS ${CMAKE_CURRENT_SOURCE_DIR}/schemas/*.yaml)
 userver_target_generate_chaotic(${PROJECT_NAME}-gen
@@ -21,7 +19,7 @@ userver_target_generate_chaotic(${PROJECT_NAME}-gen
         -n "/components/schemas/([^/]*)/=codegen::{0}"
         -f "(.*)={0}"
         # Don't call clang-format
-        --clang-format=clang-format-17 #выставить свой кланг-формат
+        --clang-format=${service_template_CLANG_FORMAT}
         # Generate serializers for responses
         --generate-serializers
     OUTPUT_DIR

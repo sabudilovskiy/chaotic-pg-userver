@@ -17,7 +17,7 @@ cmake-debug cmake-release: cmake-%:
 build-debug build-release: build-%:
 	@if [ ! -f build_$* ]; then \
         echo "build_$* does not exist. Running cmake configure..."; \
-        sudo $(MAKE) cmake-$*; \
+        $(MAKE) cmake-$*; \
     fi
 	cmake --build build_$*
 
@@ -193,7 +193,7 @@ docker-clean:
 docker-install:
 	@if [ ! -f release/container.tar ]; then \
         echo "release/container.tar does not exist. Running make docker-release..."; \
-        sudo $(MAKE) docker-release; \
+        $(MAKE) docker-release; \
 	fi
 	sudo mkdir container
 	sudo cp release/container.tar container/container.tar
@@ -207,7 +207,7 @@ docker-install:
 docker-start:
 	@if [ ! -f container ]; then \
         echo "Directory container does not exist. Running docker-install..."; \
-        sudo $(MAKE) docker-install; \
+        $(MAKE) docker-install; \
     fi
 	sudo rm -rf container/configs
 	sudo mkdir -p container/configs
