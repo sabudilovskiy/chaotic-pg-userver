@@ -18,24 +18,36 @@ To create your own userver-based service follow the following steps:
 
 Makefile contains typicaly useful targets for development:
 
-* `make build-debug` - debug build of the service with all the assertions and sanitizers enabled
-* `make build-release` - release build of the service with LTO
-* `make test-debug` - does a `make build-debug` and runs all the tests on the result
-* `make test-release` - does a `make build-release` and runs all the tests on the result
-* `make service-start-debug` - builds the service in debug mode and starts it
-* `make service-start-release` - builds the service in release mode and starts it
-* `make` or `make all` - builds and runs all the tests in release and debug modes
-* `make format` - autoformat all the C++ and Python sources
-* `make clean-` - cleans the object files
-* `make dist-clean` - clean all, including the CMake cached configurations
-* `make install` - does a `make build-release` and runs install in directory set in environment `PREFIX`
-* `make install-debug` - does a `make build-debug` and runs install in directory set in environment `PREFIX`
-* `make docker-COMMAND` - run `make COMMAND` in docker environment
-* `make docker-build-debug` - debug build of the service with all the assertions and sanitizers enabled in docker environment
-* `make docker-test-debug` - does a `make build-debug` and runs all the tests on the result in docker environment
-* `make docker-start-service-release` - does a `make install-release` and runs service in docker environment
-* `make docker-start-service-debug` - does a `make install-debug` and runs service in docker environment
-* `make docker-clean-data` - stop docker containers and clean database data
+| Команда                     | Описание                                                                                      |
+|-----------------------------|-----------------------------------------------------------------------------------------------|
+| `make all`                  | Собрать и запустить тесты для debug и release конфигураций                                     |
+| `make cmake-debug`          | Настроить проект с помощью CMake для debug конфигурации                                       |
+| `make cmake-release`        | Настроить проект с помощью CMake для release конфигурации                                     |
+| `make build-debug`          | Собрать проект с помощью CMake (debug конфигурация)                                           |
+| `make build-release`        | Собрать проект с помощью CMake (release конфигурация)                                         |
+| `make test-debug`           | Запустить все тесты (debug конфигурация)                                                      |
+| `make test-release`         | Запустить все тесты (release конфигурация)                                                    |
+| `make testsuite-debug`      | Запустить набор тестов для debug конфигурации. Используйте F для фильтрации тестов            |
+| `make testsuite-release`    | Запустить набор тестов для release конфигурации. Используйте F для фильтрации тестов          |
+| `make clean-debug`          | Очистить собранные файлы (debug конфигурация)                                                 |
+| `make clean-release`        | Очистить собранные файлы (release конфигурация)                                               |
+| `make service-start-debug`  | Запустить сервис (debug конфигурация)                                                         |
+| `make service-start-release`| Запустить сервис (release конфигурация)                                                       |
+| `make dist-clean`           | Удалить все данные и сгенерированные файлы                                                    |
+| `make add-eol`              | Добавить конец строки (EOL) в конце файлов в указанной директории. Use P to specify directory |
+| `make add-eol-root`         | Добавить конец строки (EOL) в конце файлов в корне проекта                                    |
+| `make add-eol-all`          | Добавить конец строки (EOL) во все файлы проекта                                              |
+| `make format`               | Отформатировать все файлы проекта                                                             |
+| `make check-git-status`     | Проверить, все ли файлы закоммичены в git                                                     |
+| `make find-c-compiler`      | Найти C компилятор. Use compiler and version to specify                                       |
+| `make find-cxx-compiler`    | Найти C++ компилятор. Use compiler and version to specify                                     |
+| `make install-compiler`     | Установить C/C++ компилятор. Use compiler and version to specify                              |
+| `make get_all_so`           | Найти все общие библиотеки для релиза                                                         |
+| `make docker-build`         | Собрать Docker образ                                                                          |
+| `make docker-release`       | Собрать все файлы для релиза в Docker                                                         |
+| `make docker-clean`         | Удалить данные контейнера Docker                                                              |
+| `make docker-install`       | Развернуть Docker контейнер                                                                   |
+| `make docker-start`         | Запустить Docker контейнер   
 
 Edit `Makefile.local` to change the default configuration and build options.
 
@@ -45,3 +57,23 @@ Edit `Makefile.local` to change the default configuration and build options.
 The original template is distributed under the [Apache-2.0 License](https://github.com/userver-framework/userver/blob/develop/LICENSE)
 and [CLA](https://github.com/userver-framework/userver/blob/develop/CONTRIBUTING.md). Services based on the template may change
 the license and CLA.
+
+## How to build docker and release
+
+```sh
+make docker-release
+```
+
+After all commands are executed correctly, container.tar and service_template.tar will be in /release
+
+## How to run via docker
+
+You need to take service_template.tar and container.tar from the releases.
+
+```sh
+docker load -i service_template.tar
+tar -xf container.tar
+docker-compose up
+```
+
+All data from container will be in /container.
