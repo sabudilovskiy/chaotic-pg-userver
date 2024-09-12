@@ -57,7 +57,7 @@ jobs:
       - name: Reuse ccache directory
         uses: actions/cache@v2
         with:
-          path: ~/.ccache
+          path: ~/.cache/ccache
           key: '${{matrix.os}} ${{matrix.title}} ccache-dir ${{github.ref}} run-${{github.run_number}}'
           restore-keys: |
             ${{matrix.os}} ${{matrix.title}} ccache-dir ${{github.ref}} run-'
