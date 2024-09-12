@@ -14,3 +14,7 @@ cmake-build-*
 Testing/
 .DS_Store
 Makefile.local
+_tmp
+_so
+release
+container

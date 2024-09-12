@@ -5,3 +5,5 @@ logger-level: debug
 is-testing: false
 
 server-port: 8080
+
+dbconnection: 'postgresql://service_template_user:top_secret@localhost:18800/service_template_db_1'
