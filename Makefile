@@ -15,7 +15,7 @@ cmake-debug cmake-release: cmake-%:
 # build project via cmake
 .PHONY: build-%
 build-debug build-release: build-%:
-	@if [ ! -f build_$* ]; then \
+	@if [ ! -d build_$* ]; then \
         echo "build_$* does not exist. Running cmake configure..."; \
         $(MAKE) cmake-$*; \
     fi
@@ -160,7 +160,14 @@ get_all_so:
 # build docker image
 .PHONY: docker-build
 docker-build: build-release get_all_so
-	sudo docker build -t service_template:latest .
+	HOST_ID=$$(lsb_release -is); \
+    HOST_VERSION=$$(lsb_release -rs | cut -d. -f1,2); \
+	if [ "$${HOST_ID}" != "Ubuntu" ]; then \
+        echo "The base operating system is not Ubuntu."; \
+        exit 1; \
+    fi; \
+	echo "Host OS: Ubuntu $${HOST_VERSION}"; \
+	docker build --build-arg UBUNTU_VERSION=$${HOST_VERSION} -t my_image .
 	rm -rf _so
 	mkdir -p release
 	sudo docker save -o release/service_template.tar service_template:latest
@@ -205,7 +212,7 @@ docker-install:
 # start docker container
 .PHONY: docker-start
 docker-start:
-	@if [ ! -f container ]; then \
+	@if [ ! -d container ]; then \
         echo "Directory container does not exist. Running docker-install..."; \
         $(MAKE) docker-install; \
     fi
@@ -217,32 +224,32 @@ docker-start:
 
 .PHONY: help
 help:
-	@echo "Доступные цели:"
-	@echo "  all                 - Собрать и запустить тесты для debug и release конфигураций"
-	@echo "  cmake-debug         - Настроить проект с помощью CMake для debug конфигурации"
-	@echo "  cmake-release       - Настроить проект с помощью CMake для release конфигурации"
-	@echo "  build-debug         - Собрать проект с помощью CMake (debug конфигурация)"
-	@echo "  build-release       - Собрать проект с помощью CMake (release конфигурация)"
-	@echo "  test-debug          - Запустить все тесты (debug конфигурация)"
-	@echo "  test-release        - Запустить все тесты (release конфигурация)"
-	@echo "  testsuite-debug     - Запустить набор тестов для debug конфигурации. Используйте F для фильтрации тестов"
-	@echo "  testsuite-release   - Запустить набор тестов для release конфигурации. Используйте F для фильтрации тестов"
-	@echo "  clean-debug         - Очистить собранные файлы (debug конфигурация)"
-	@echo "  clean-release       - Очистить собранные файлы (release конфигурация)"
-	@echo "  service-start-debug - Запустить сервис (debug конфигурация)"
-	@echo "  service-start-release - Запустить сервис (release конфигурация)"
-	@echo "  dist-clean          - Удалить все данные и сгенерированные файлы"
-	@echo "  add-eol             - Добавить конец строки (EOL) в конце файлов в указанной директории. Use P to specify directory"
-	@echo "  add-eol-root        - Добавить конец строки (EOL) в конце файлов в корне проекта"
-	@echo "  add-eol-all         - Добавить конец строки (EOL) во все файлы проекта"
-	@echo "  format              - Отформатировать все файлы проекта"
-	@echo "  check-git-status    - Проверить, все ли файлы закоммичены в git"
-	@echo "  find-c-compiler     - Найти C компилятор. Use compiler and version to specify"
-	@echo "  find-cxx-compiler   - Найти C++ компилятор. Use compiler and version to specify"
-	@echo "  install-compiler    - Установить C/C++ компилятор. Use compiler and version to specify"
-	@echo "  get_all_so          - Найти все общие библиотеки для релиза"
-	@echo "  docker-build        - Собрать Docker образ"
-	@echo "  docker-release      - Собрать все файлы для релиза в Docker"
-	@echo "  docker-clean        - Удалить данные контейнера Docker"
-	@echo "  docker-install      - Развернуть Docker контейнер"
-	@echo "  docker-start        - Запустить Docker контейнер"
+	@echo "Available commands:"
+	@echo "  all                 - Build and run tests for debug and release configurations"
+	@echo "  cmake-debug         - Configure the project using CMake for debug configuration"
+	@echo "  cmake-release       - Configure the project using CMake for release configuration"
+	@echo "  build-debug         - Build the project using CMake (debug configuration)"
+	@echo "  build-release       - Build the project using CMake (release configuration)"
+	@echo "  test-debug          - Run all tests (debug configuration)"
+	@echo "  test-release        - Run all tests (release configuration)"
+	@echo "  testsuite-debug     - Run a test suite for the debug configuration. Use F to filter tests"
+	@echo "  testsuite-release   - Run a test suite for the release configuration. Use F to filter tests"
+	@echo "  clean-debug         - Clean built files (debug configuration)"
+	@echo "  clean-release       - Clean built files (release configuration)"
+	@echo "  service-start-debug - Start the service (debug configuration)"
+	@echo "  service-start-release - Start the service (release configuration)"
+	@echo "  dist-clean          - Remove all data and generated files"
+	@echo "  add-eol             - Add an end-of-line (EOL) character to the end of files in the specified directory. Use P to specify directory"
+	@echo "  add-eol-root        - Add an end-of-line (EOL) character to the end of files in the project root"
+	@echo "  add-eol-all         - Add an end-of-line (EOL) character to all project files"
+	@echo "  format              - Format all project files"
+	@echo "  check-git-status    - Check if all files are committed in git"
+	@echo "  find-c-compiler     - Find a C compiler. Use compiler and version to specify"
+	@echo "  find-cxx-compiler   - Find a C++ compiler. Use compiler and version to specify"
+	@echo "  install-compiler    - Install a C/C++ compiler. Use compiler and version to specify"
+	@echo "  get_all_so          - Find all shared libraries for release"
+	@echo "  docker-build        - Build a Docker image"
+	@echo "  docker-release      - Build all files for release in Docker"
+	@echo "  docker-clean        - Remove Docker container data"
+	@echo "  docker-install      - Deploy the Docker container"
+	@echo "  docker-start        - Start the Docker container"

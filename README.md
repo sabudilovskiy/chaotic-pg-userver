@@ -18,37 +18,36 @@ To create your own userver-based service follow the following steps:
 
 Makefile contains typicaly useful targets for development:
 
-| Команда                     | Описание                                                                                      |
-|-----------------------------|-----------------------------------------------------------------------------------------------|
-| `make all`                  | Собрать и запустить тесты для debug и release конфигураций                                     |
-| `make cmake-debug`          | Настроить проект с помощью CMake для debug конфигурации                                       |
-| `make cmake-release`        | Настроить проект с помощью CMake для release конфигурации                                     |
-| `make build-debug`          | Собрать проект с помощью CMake (debug конфигурация)                                           |
-| `make build-release`        | Собрать проект с помощью CMake (release конфигурация)                                         |
-| `make test-debug`           | Запустить все тесты (debug конфигурация)                                                      |
-| `make test-release`         | Запустить все тесты (release конфигурация)                                                    |
-| `make testsuite-debug`      | Запустить набор тестов для debug конфигурации. Используйте F для фильтрации тестов            |
-| `make testsuite-release`    | Запустить набор тестов для release конфигурации. Используйте F для фильтрации тестов          |
-| `make clean-debug`          | Очистить собранные файлы (debug конфигурация)                                                 |
-| `make clean-release`        | Очистить собранные файлы (release конфигурация)                                               |
-| `make service-start-debug`  | Запустить сервис (debug конфигурация)                                                         |
-| `make service-start-release`| Запустить сервис (release конфигурация)                                                       |
-| `make dist-clean`           | Удалить все данные и сгенерированные файлы                                                    |
-| `make add-eol`              | Добавить конец строки (EOL) в конце файлов в указанной директории. Use P to specify directory |
-| `make add-eol-root`         | Добавить конец строки (EOL) в конце файлов в корне проекта                                    |
-| `make add-eol-all`          | Добавить конец строки (EOL) во все файлы проекта                                              |
-| `make format`               | Отформатировать все файлы проекта                                                             |
-| `make check-git-status`     | Проверить, все ли файлы закоммичены в git                                                     |
-| `make find-c-compiler`      | Найти C компилятор. Use compiler and version to specify                                       |
-| `make find-cxx-compiler`    | Найти C++ компилятор. Use compiler and version to specify                                     |
-| `make install-compiler`     | Установить C/C++ компилятор. Use compiler and version to specify                              |
-| `make get_all_so`           | Найти все общие библиотеки для релиза                                                         |
-| `make docker-build`         | Собрать Docker образ                                                                          |
-| `make docker-release`       | Собрать все файлы для релиза в Docker                                                         |
-| `make docker-clean`         | Удалить данные контейнера Docker                                                              |
-| `make docker-install`       | Развернуть Docker контейнер                                                                   |
-| `make docker-start`         | Запустить Docker контейнер   
-
+| Command                     | Description                                                                                                           |
+|-----------------------------|-----------------------------------------------------------------------------------------------------------------------|
+| `make all`                  | Build and run tests for debug and release configurations                                                              |
+| `make cmake-debug`          | Configure the project using CMake for debug configuration                                                             |
+| `make cmake-release`        | Configure the project using CMake for release configuration                                                           |
+| `make build-debug`          | Build the project using CMake (debug configuration)                                                                   |
+| `make build-release`        | Build the project using CMake (release configuration)                                                                 |
+| `make test-debug`           | Run all tests (debug configuration)                                                                                   |
+| `make test-release`         | Run all tests (release configuration)                                                                                 |
+| `make testsuite-debug`      | Run a test suite for the debug configuration. Use `F` to filter tests                                                 |
+| `make testsuite-release`    | Run a test suite for the release configuration. Use `F` to filter tests                                               |
+| `make clean-debug`          | Clean built files (debug configuration)                                                                               |
+| `make clean-release`        | Clean built files (release configuration)                                                                             |
+| `make service-start-debug`  | Start the service (debug configuration)                                                                               |
+| `make service-start-release`| Start the service (release configuration)                                                                             |
+| `make dist-clean`           | Remove all data and generated files                                                                                   |
+| `make add-eol`              | Add an end-of-line (EOL) character to the end of files in the specified directory. Use `P` to specify directory       |
+| `make add-eol-root`         | Add an end-of-line (EOL) character to the end of files in the project root                                            |
+| `make add-eol-all`          | Add an end-of-line (EOL) character to all project files                                                               |
+| `make format`               | Format all project files                                                                                              |
+| `make check-git-status`     | Check if all files are committed in git                                                                               |
+| `make find-c-compiler`      | Find a C compiler. Use `compiler` and `version` to specify                                                            |
+| `make find-cxx-compiler`    | Find a C++ compiler. Use `compiler` and `version` to specify                                                          |
+| `make install-compiler`     | Install a C/C++ compiler. Use `compiler` and `version` to specify                                                     |
+| `make get_all_so`           | Find all shared libraries for release                                                                                 |
+| `make docker-build`         | Build a Docker image                                                                                                  |
+| `make docker-release`       | Build all files for release in Docker                                                                                 |
+| `make docker-clean`         | Remove Docker container data                                                                                          |
+| `make docker-install`       | Deploy the Docker container                                                                                           |
+| `make docker-start`         | Start the Docker container                                                                                            |
 Edit `Makefile.local` to change the default configuration and build options.
 
 
